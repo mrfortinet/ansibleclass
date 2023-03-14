@@ -1,6 +1,6 @@
 ---
 - name: Configure Webserver
-  hosts: tag_solution_webserver_jesbe
+  hosts: tag_solution_webserver_cbs
   become: true
   vars:
     websiteheader: "Ansible Playbook"
