@@ -1,18 +1,26 @@
 ---
-- name: Facts
+- name: Loop 2
   hosts: linuxservers
+  become: true
 
   tasks:
-    - name: Debug Facts
-      ansible.builtin.debug:
-        msg: "{{ ansible_facts }}"
-    - name: Debug Facts Hostname - Unsafe Text
-      ansible.builtin.debug:
-        msg: "{{ ansible_facts['nodename'] }}"
-    - name: Debug Facts ipv4 - List
-      ansible.builtin.debug:
-        msg: "{{ ansible_facts['all_ipv4_addresses'][0] }}"
+    - name: Ensure group developers exists
+      ansible.builtin.group:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - It
+        - Developers
+        - Finance
+        - Management
 
-    - name: Debug Facts SeLinux Status - Dictionary
-      ansible.builtin.debug:
-        msg: "{{ ansible_facts['selinux']['status'] }}"
+    - name: Create Users
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        group: "{{ item.groups }}"
+      loop:
+        - { name: 'homer', groups: 'Developers' }
+        - { name: 'bart', groups: 'It' }
+        - { name: 'lisa', groups: 'Management' }
+        - { name: 'ned', groups: 'Finance' }
+        - { name: 'moe', groups: 'Developers' }
